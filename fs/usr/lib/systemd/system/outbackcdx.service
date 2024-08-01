@@ -1,0 +1,10 @@
+[Unit]
+Description=OutbackCDX
+
+[Service]
+User=ec2-user
+EnvironmentFile=/etc/sysconfig/outbackcdx
+ExecStart=/opt/java11/bin/java ${OPTIONS} -jar /opt/cdx/outbackcdx.jar -p ${PORT} -d ${CDXDIR}
+
+[Install]
+WantedBy=multi-user.target

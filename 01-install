@@ -1,0 +1,47 @@
+#!/bin/sh
+set -e
+
+# source common bashlib or exit
+if [[ -f ${UKWACOMMONDIR}/common.sh ]]; then source ${UKWACOMMONDIR}/common.sh; else echo "ERROR: ${UKWACOMMONDIR}/common.sh missing"; exit 1; fi
+
+NOPREFIX=1
+DEBUG=
+
+OUTBACKCDX=outbackcdx-1.0.0.jar
+CDXDIR=/opt/cdx
+CDXDATADIR=/mnt/cdx
+GROUP=$(id -g -n)
+
+
+# functions ----------
+function install_cdx {
+	echo "install_cdx"
+	# ensure local jar exists
+	if ! [[ -f ${OUTBACKCDX} ]]; then
+		echo -e "ERROR:\t Outbackcdx jar [${OUTBACKCDX}] missing"
+		echo -e "\t Please download from https://github.com/nla/outbackcdx/releases"
+		exit 1
+	fi
+	# install outbackcdx
+	[[ -d ${CDXDIR}/ ]] || sudo mkdir ${CDXDIR}
+	sudo chown ${USER}:${GROUP} ${CDXDIR}
+	rsync -a ${OUTBACKCDX} ${CDXDIR}/
+	[[ -L ${CDXDIR}/outbackcdx.jar ]] || ln -s ${CDXDIR}/${OUTBACKCDX} ${CDXDIR}/outbackcdx.jar
+	echo
+	echo "ls -la ${CDXDIR}/"
+	ls -la ${CDXDIR}/
+	echo
+}
+
+function make_cdx_data_dir {
+	echo "Making cdx data directory ${CDXDATADIR}"
+	[[ -d ${CDXDATADIR} ]] || sudo mkdir ${CDXDATADIR}
+	sudo chown ${USER}:${GROUP} ${CDXDATADIR}
+}
+
+# script -------------
+install_cdx
+copy_directory fs
+make_cdx_data_dir
+
+log_stop

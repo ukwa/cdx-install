@@ -1,0 +1,3 @@
+OPTIONS="-Xmx4g"
+PORT=8081
+CDXDIR=/mnt/cdx
