@@ -2,6 +2,6 @@
 *.swp
 *.pyc
 *venv*
-*/outbackcdx*jar
+outbackcdx*jar
 z*
 _z*
